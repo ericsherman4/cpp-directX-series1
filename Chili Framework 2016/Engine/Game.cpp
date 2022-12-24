@@ -42,8 +42,8 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	int x = 400;
-	int y = 300;
+	// int x = 400;
+	// int y = 300;
 
 	// shift control space to view definition
 	// vk = virtual key (code)
@@ -53,36 +53,40 @@ void Game::ComposeFrame()
 
 	const bool symboltype = wnd.kbd.KeyIsPressed( VK_SHIFT );
 	const bool color = wnd.kbd.KeyIsPressed( VK_CONTROL );
-	int color1 = 0;
-	int color2 = 0;
+
+	int color1 = 100;
+	int color2 = 100;
+
+	const int offset = 3;
+ 
 
 	if (color)
 	{
-		color1 = 255;
+		color2 = 255;
 	}
 	else
 	{
-		color2 = 255;
+		color1 = 255;
 	}
 
 	if (wnd.kbd.KeyIsPressed(VK_UP))
 	{
-		y = y - 50;
+		y = y - offset;
 	}
 
 	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 	{
-		x = x + 50;
+		x = x + offset;
 	}
 
 	if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
-		x = x - 50;
+		x = x - offset;
 	}
 
 	if (wnd.kbd.KeyIsPressed(VK_DOWN))
 	{
-		y = y + 50;
+		y = y + offset;
 	}
 
 	if (!symboltype)
