@@ -37,7 +37,8 @@ private:
 	/********************************/
 	/*  User Functions              */
 	/********************************/
-	void DrawBox();
+	void DrawBox(int x, int y, int r, int g, int b);
+	bool OverlapTest(int x, int y);
 private:
 	MainWindow& wnd;
 	Graphics gfx;
