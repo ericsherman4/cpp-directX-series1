@@ -45,7 +45,7 @@ Graphics::Graphics( HWNDKey& key )
 	assert( key.hWnd != nullptr );
 
 	//////////////////////////////////////////////////////
-	// create device and swap chain/get render target view
+	// create device and swap chain/get  render target view
 	DXGI_SWAP_CHAIN_DESC sd = {};
 	sd.BufferCount = 1;
 	sd.BufferDesc.Width = Graphics::ScreenWidth;

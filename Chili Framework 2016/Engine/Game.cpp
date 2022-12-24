@@ -42,4 +42,26 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
+	const int x = 200;
+	const int y = 200;
+
+	// shift control space to view definition
+	const bool cond = wnd.kbd.KeyIsPressed( VK_UP ); //vk = virtual key (code)
+
+	if (cond)
+	{
+		gfx.PutPixel(x - 5, y, 0, 255, 255);
+		gfx.PutPixel(x - 4, y, 0, 255, 255);
+		gfx.PutPixel(x - 3, y, 0, 255, 255);
+		gfx.PutPixel(x + 3, y, 0, 255, 255);
+		gfx.PutPixel(x + 4, y, 0, 255, 255);
+		gfx.PutPixel(x + 5, y, 0, 255, 255);
+
+		gfx.PutPixel(x, y - 5, 0, 255, 255);
+		gfx.PutPixel(x, y - 4, 0, 255, 255);
+		gfx.PutPixel(x, y - 3, 0, 255, 255);
+		gfx.PutPixel(x, y + 3, 0, 255, 255);
+		gfx.PutPixel(x, y + 4, 0, 255, 255);
+		gfx.PutPixel(x, y + 5, 0, 255, 255);
+	}
 }
