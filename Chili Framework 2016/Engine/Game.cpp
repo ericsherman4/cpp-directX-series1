@@ -1,5 +1,5 @@
-/****************************************************************************************** 
- *	Chili DirectX Framework Version 16.07.20											  *	
+/******************************************************************************************
+ *	Chili DirectX Framework Version 16.07.20											  *
  *	Game.cpp																			  *
  *	Copyright 2016 PlanetChili.net <http://www.planetchili.net>							  *
  *																						  *
@@ -21,16 +21,16 @@
 #include "MainWindow.h"
 #include "Game.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd )
+	wnd(wnd),
+	gfx(wnd)
 {
 }
 
 void Game::Go()
 {
-	gfx.BeginFrame();	
+	gfx.BeginFrame();
 	UpdateModel();
 	ComposeFrame();
 	gfx.EndFrame();
@@ -38,177 +38,121 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	// https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes?redirectedfrom=MSDN
-	
-	const int offset = 1;
-
-	// change color
-	if (wnd.kbd.KeyIsPressed (VK_CONTROL))
-	{
-		color = 255;
-	}
-	else
-	{
-		color = 0;
-	}
-
-	//change shape
-	if (wnd.kbd.KeyIsPressed(VK_SHIFT))
-	{
-		shapeChanged = true;
-	}
-	else
-	{
-		shapeChanged = false;
-	}
-
-	//update velocities
-	if (wnd.kbd.KeyIsPressed(VK_UP))
-	{
-		if (!inhibitUp)
-		{
-			vy = vy - offset;
-			inhibitUp = true;
-		}
-	}
-	else
-	{
-		inhibitUp = false;
-	}
-
 	if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 	{
-		if (!inhibitRight)
-		{
-			vx = vx + offset;
-			inhibitRight = true;
-		}
-	}
-	else
-	{
-		inhibitRight = false;
+		x_mobile = x_mobile + 1;
 	}
 
 	if (wnd.kbd.KeyIsPressed(VK_LEFT))
 	{
-		if (!inhibitLeft)
-		{
-			vx = vx - offset;
-			inhibitLeft = true;
-		}	
-	}
-	else
-	{
-		inhibitLeft = false;
+		x_mobile = x_mobile - 1;
 	}
 
 	if (wnd.kbd.KeyIsPressed(VK_DOWN))
 	{
-		if (!inhibitDown)
-		{
-			vy = vy + offset;
-			inhibitDown = true;
-		}
-	}
-	else
-	{
-		inhibitDown = false;
+		y_mobile = y_mobile + 1;
 	}
 
-	//update positions
-	x = x + vx;
-	y = y + vy;
-
-	//check positiions
-	if (x + 5 > gfx.ScreenWidth - 1)
+	if (wnd.kbd.KeyIsPressed(VK_UP))
 	{
-		x = gfx.ScreenWidth - 6;
-		vx = 0;
-	}
-	else if (x - 5 < 0)
-	{
-		x = 5;
-		vx = 0;
+		y_mobile = y_mobile - 1;
 	}
 
-	if (y + 5 > gfx.ScreenHeight - 1)
-	{
-		y = gfx.ScreenHeight - 6;
-		vy = 0;
-	}
-	else if (y - 5 < 0)
-	{
-		y = 5;
-		vy = 0;
-	}
+	colliding =
+		OverlapTest(x_fixed0, y_fixed0, x_mobile, y_mobile) ||
+		OverlapTest(x_fixed1, y_fixed1, x_mobile, y_mobile) ||
+		OverlapTest(x_fixed2, y_fixed2, x_mobile, y_mobile) ||
+		OverlapTest(x_fixed3, y_fixed3, x_mobile, y_mobile);
 
-	if (x <= 412 && x >= 388 && y <= 312 && y >= 288)
-	{
-		color = 255;
-	}
+	x_mobile = XBoundaryTest(x_mobile);
+	y_mobile = YboundaryTest(y_mobile);
 }
 
 void Game::ComposeFrame()
 {
-	
-	if (shapeChanged)
+	DrawBox(x_fixed0, y_fixed0, 0, 255, 0);
+	DrawBox(x_fixed1, y_fixed1, 0, 255, 0);
+	DrawBox(x_fixed2, y_fixed2, 0, 255, 0);
+	DrawBox(x_fixed3, y_fixed3, 0, 255, 0);
+
+	if (colliding)
 	{
-		gfx.PutPixel(x - 5, y, 255, color, color);
-		gfx.PutPixel(x - 4, y, 255, color, color);
-		gfx.PutPixel(x - 3, y, 255, color, color);
-		gfx.PutPixel(x + 3, y, 255, color, color);
-		gfx.PutPixel(x + 4, y, 255, color, color);
-		gfx.PutPixel(x + 5, y, 255, color, color);
-								   
-		gfx.PutPixel(x, y - 5, 255, color, color);
-		gfx.PutPixel(x, y - 4, 255, color, color);
-		gfx.PutPixel(x, y - 3, 255, color, color);
-		gfx.PutPixel(x, y + 3, 255, color, color);
-		gfx.PutPixel(x, y + 4, 255, color, color);
-		gfx.PutPixel(x, y + 5, 255, color, color);
+		DrawBox(x_mobile, y_mobile, 255, 0, 0);
 	}
 	else
 	{
-		DrawBox(x,y,255, color, color);
+		DrawBox(x_mobile, y_mobile, 255, 255, 255);
 	}
-
-	DrawBox(400, 300, 0, 255, 0);
-
 }
 
 void Game::DrawBox(int x, int y, int r, int g, int b)
 {
-	gfx.PutPixel(x - 6, y - 6, r, g, b); //section 1
-	gfx.PutPixel(x - 5, y - 6, r, g, b);
-	gfx.PutPixel(x - 4, y - 6, r, g, b);
-	gfx.PutPixel(x - 3, y - 6, r, g, b);
-	gfx.PutPixel(x - 6, y - 5, r, g, b);
-	gfx.PutPixel(x - 6, y - 4, r, g, b);
-	gfx.PutPixel(x - 6, y - 3, r, g, b);
-	gfx.PutPixel(x + 6, y - 6, r, g, b); // section 2
-	gfx.PutPixel(x + 5, y - 6, r, g, b);
-	gfx.PutPixel(x + 4, y - 6, r, g, b);
-	gfx.PutPixel(x + 3, y - 6, r, g, b);
-	gfx.PutPixel(x + 6, y - 5, r, g, b);
-	gfx.PutPixel(x + 6, y - 4, r, g, b);
-	gfx.PutPixel(x + 6, y - 3, r, g, b);
-	gfx.PutPixel(x + 6, y + 6, r, g, b); // section 3
-	gfx.PutPixel(x + 5, y + 6, r, g, b);
-	gfx.PutPixel(x + 4, y + 6, r, g, b);
-	gfx.PutPixel(x + 3, y + 6, r, g, b);
-	gfx.PutPixel(x + 6, y + 5, r, g, b);
-	gfx.PutPixel(x + 6, y + 4, r, g, b);
-	gfx.PutPixel(x + 6, y + 3, r, g, b);
-	gfx.PutPixel(x - 6, y + 6, r, g, b); // section 4
-	gfx.PutPixel(x - 5, y + 6, r, g, b);
-	gfx.PutPixel(x - 4, y + 6, r, g, b);
-	gfx.PutPixel(x - 3, y + 6, r, g, b);
-	gfx.PutPixel(x - 6, y + 5, r, g, b);
-	gfx.PutPixel(x - 6, y + 4, r, g, b);
-	gfx.PutPixel(x - 6, y + 3, r, g, b);
+	gfx.PutPixel(-5 + x, -5 + y, r, g, b);
+	gfx.PutPixel(-5 + x, -4 + y, r, g, b);
+	gfx.PutPixel(-5 + x, -3 + y, r, g, b);
+	gfx.PutPixel(-4 + x, -5 + y, r, g, b);
+	gfx.PutPixel(-3 + x, -5 + y, r, g, b);
+	gfx.PutPixel(-5 + x, 5 + y, r, g, b);
+	gfx.PutPixel(-5 + x, 4 + y, r, g, b);
+	gfx.PutPixel(-5 + x, 3 + y, r, g, b);
+	gfx.PutPixel(-4 + x, 5 + y, r, g, b);
+	gfx.PutPixel(-3 + x, 5 + y, r, g, b);
+	gfx.PutPixel(5 + x, -5 + y, r, g, b);
+	gfx.PutPixel(5 + x, -4 + y, r, g, b);
+	gfx.PutPixel(5 + x, -3 + y, r, g, b);
+	gfx.PutPixel(4 + x, -5 + y, r, g, b);
+	gfx.PutPixel(3 + x, -5 + y, r, g, b);
+	gfx.PutPixel(5 + x, 5 + y, r, g, b);
+	gfx.PutPixel(5 + x, 4 + y, r, g, b);
+	gfx.PutPixel(5 + x, 3 + y, r, g, b);
+	gfx.PutPixel(4 + x, 5 + y, r, g, b);
+	gfx.PutPixel(3 + x, 5 + y, r, g, b);
 }
 
 bool Game::OverlapTest(int box0x, int box0y, int box1x, int box1y)
 {
-	return (box0x <= 412 && box1x >= 388 && box0y <= 312 && box1y >= 288);
+	const int left_box0 = box0x - 5;
+	const int right_box0 = box0x + 5;
+	const int top_box0 = box0y - 5;
+	const int bottom_box0 = box0y + 5;
+
+	const int left_box1 = box1x - 5;
+	const int right_box1 = box1x + 5;
+	const int top_box1 = box1y - 5;
+	const int bottom_box1 = box1y + 5;
+
+	return
+		left_box0 <= right_box1 &&
+		right_box0 >= left_box1 &&
+		top_box0 <= bottom_box1 &&
+		bottom_box0 >= top_box1;
 }
+
+int Game::XBoundaryTest(int x)
+{
+	if (x - 5 < 0)
+	{
+		return 5;
+	}
+	else if (x + 5 > gfx.ScreenWidth - 1)
+	{
+		return gfx.ScreenWidth-1 -5;
+	}
+	return x;
+}
+
+
+int Game::YboundaryTest(int y)
+{
+	if (y - 5 < 0)
+	{
+		return 5;
+	}
+	else if (y + 5 > gfx.ScreenHeight - 1)
+	{
+		return gfx.ScreenHeight-1-5;
+	}
+	return y;
+}
+
+
