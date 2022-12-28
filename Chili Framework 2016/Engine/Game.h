@@ -25,6 +25,7 @@
 #include "Graphics.h"
 #include "Poo.h"
 #include "Dude.h"
+#include <random>
 
 class Game
 {
@@ -38,24 +39,25 @@ private:
 	void UpdateModel();
 	/********************************/
 	/*  User Functions              */
-	//void DrawFace(int x, int y);
-	//void DrawPoo(int x, int y);
 	void DrawGameOver(int x, int y);
 	void DrawTitleScreen(int x, int y);
-	//int ClampScreenX(int x, int width);
-	//int ClampScreenY(int y, int height);
-	//bool IsColliding(int x0, int y0, int width0, int height0,
-	//	int x1, int y1, int width1, int height1);
 	/********************************/
 private:
 	MainWindow& wnd;
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	
+	// NOTE THAT THIS STUFF HAS TO BE DELCARED BEFORE POO. BECAUSE YOU NEED THESE OBJECTS TO INITIALIZE POO IN THE INITIALIZER LIST.
+	std::random_device rd;
+	std::mt19937 rng;
+	std::uniform_int_distribution<int> xDist;
+	std::uniform_int_distribution<int> yDist;
+
+	static constexpr int nPoo = 1000;
+
 	Dude dude0;
-	Poo poo0;
-	Poo poo1;
-	Poo poo2;
+	Poo poos[nPoo];
 	int pooWidth = 24;
 	int pooHeight = 24;
 	bool isStarted = false;

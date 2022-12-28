@@ -288,6 +288,7 @@ void Graphics::EndFrame()
 	pImmediateContext->Draw( 6u,0u );
 
 	// flip back/front buffers
+
 	if( FAILED( hr = pSwapChain->Present( 1u,0u ) ) )
 	{
 		if( hr == DXGI_ERROR_DEVICE_REMOVED )

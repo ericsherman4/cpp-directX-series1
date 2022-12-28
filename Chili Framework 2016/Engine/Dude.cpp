@@ -1,6 +1,52 @@
 #include "Dude.h"
 #include "Graphics.h"
 
+Dude::Dude(int in_x, int in_y)
+{
+	x = in_x;
+	y = in_y;
+}
+
+void Dude::CheckKeys(const Keyboard& kbd)
+{
+	if (kbd.KeyIsPressed(VK_RIGHT))
+	{
+		x += speed;
+	}
+	if (kbd.KeyIsPressed(VK_LEFT))
+	{
+		x -= speed;
+	}
+	if (kbd.KeyIsPressed(VK_DOWN))
+	{
+		y += speed;
+	}
+	if (kbd.KeyIsPressed(VK_UP))
+	{
+		y -= speed;
+	}
+}
+
+int Dude::GetXPos() const
+{
+	return x;
+}
+
+int Dude::GetYPos() const
+{
+	return y;
+}
+
+int Dude::GetWidth() const
+{
+	return width;
+}
+
+int Dude::GetHeight() const
+{
+	return height;
+}
+
 void Dude::Update()
 {
 	const int right = x + width;
