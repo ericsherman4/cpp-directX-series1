@@ -26,6 +26,7 @@
 #include "Poo.h"
 #include "Dude.h"
 #include <random>
+#include "target.h"
 
 class Game
 {
@@ -41,6 +42,7 @@ private:
 	/*  User Functions              */
 	void DrawGameOver(int x, int y);
 	void DrawTitleScreen(int x, int y);
+	void DrawProgressBar(int x, int y);
 	/********************************/
 private:
 	MainWindow& wnd;
@@ -55,12 +57,17 @@ private:
 	std::uniform_int_distribution<int> yDist;
 	std::uniform_int_distribution<int> velDist;
 
-	static constexpr int nPoo = 1000;
+	static constexpr int nPoo = 15;
 
 	Dude dude0;
 	Poo poos[nPoo];
+	Target target;
 	int pooWidth = 24;
 	int pooHeight = 24;
 	bool isStarted = false;
+	bool isGameOver = false;
+	int targetsHit = 0;
+	static constexpr int progressBarHeight = 15;
+	int progressBarWidth = 0;
 	/********************************/
 };

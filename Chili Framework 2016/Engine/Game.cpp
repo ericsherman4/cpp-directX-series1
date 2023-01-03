@@ -32,7 +32,8 @@ Game::Game(MainWindow& wnd)
 	xDist(0, 770),
 	yDist(0, 570),
 	velDist(-1,1),
-	dude0(400, 300)
+	dude0(400, 300),
+	target()
 {
 	for (int i = 0; i < nPoo; i++)
 	{
@@ -52,20 +53,37 @@ void Game::UpdateModel()
 {
 	if (isStarted)
 	{
+		if (!isGameOver)
+		{
+			dude0.CheckKeys(wnd.kbd);
+
+			dude0.Update();
+
+			for (int i = 0; i < nPoo; i++)
+			{
+				poos[i].Update();
+			}
+
+			for (int i = 0; i < nPoo; i++)
+			{
+				poos[i].ProcessConsumption(dude0);
+				if (poos[i].IsEaten())
+				{
+					isGameOver = true;
+				}
+			}
+
+			target.UpdateColors();
+
+			if (target.ProcessCollision(dude0))
+			{
+				target.Move();
+				targetsHit++;
+				progressBarWidth += 10;
+			}
+
+		}
 		
-		dude0.CheckKeys(wnd.kbd);
-
-		dude0.Update();
-
-		for (int i = 0; i < nPoo; i++)
-		{
-			poos[i].Update();
-		}
-
-		for (int i = 0; i < nPoo; i++)
-		{
-			poos[i].ProcessConsumption(dude0);
-		}
 	}
 	else
 	{
@@ -28424,6 +28442,18 @@ void Game::DrawTitleScreen(int x, int y)
 	gfx.PutPixel(149 + x, 174 + y, 208, 34, 34);
 }
 
+void Game::DrawProgressBar(int x, int y)
+{
+	for (int i = 0; i < progressBarWidth; i++)
+	{
+		for (int j = 0; j < progressBarHeight; j++)
+		{
+			gfx.PutPixel(x + i, y + j, 0, 255, 0);
+		}
+	}
+
+}
+
 
 void Game::ComposeFrame()
 {
@@ -28433,26 +28463,20 @@ void Game::ComposeFrame()
 	}
 	else
 	{
-		bool test = true;
+		DrawProgressBar(20, 20);
 
-		for (int i = 0; i < nPoo; i++)
-		{
-			test = test && poos[i].IsEaten();
-		}
+		target.Draw(gfx);
 
-		if (test)
-		{
-			DrawGameOver(358, 268);
-		}
-		
 		dude0.Draw(gfx);
 
 		for (int i = 0; i < nPoo; i++)
 		{
-			if (!poos[i].IsEaten())
-			{
-				poos[i].Draw(gfx);
-			}
+			poos[i].Draw(gfx);
+		}
+
+		if (isGameOver)
+		{
+			DrawGameOver(358, 268);
 		}
 
 	}
