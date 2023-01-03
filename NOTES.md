@@ -1,0 +1,126 @@
+# Classes
+- constant keyword after a function decl (you also need in the cpp file as well) in a class means that the function will not change the internal state of an object (wont change any member variables)
+- think about making getters and think even harder about making setter functions. an alternative is make a function such as like update() that will act on the private members of the class. see tutorial 12. Basically, try doing whole operations inside of member functions so that you don't need to do get and set. 
+
+### Initializer lists and Constructors
+If you have objects embedded in a class, you can initialize them in the class' constructor. 
+i.e
+```C++
+class Game
+{
+private:
+    Some_Other_Object obj1;
+    Some_Other_Object obj2;
+};
+
+Game::Game()
+    :
+    obj1(args),
+    obj2(args)
+{
+    // Constructor Body
+}
+
+```
+**The order of the execution of the initializer list has nothing to do with the order in which they appear in the constructor, but purely depend on the order of which they the member variables are declared.**
+
+What if you need to do some things in the constructor before initializing the object? 
+If the "things" is in the form of creating other objects such as RNG and passing them in, you can make the RNGs private members of the Game class and then including them in the initializer list. 
+
+What if you can't get around this? If you need some sort of logic before calling constructors? 
+
+Say now we have: 
+
+```C++
+class Game
+{
+private:
+    static constexpr nObj = 1000;
+    Some_Other_Object objs[nObj];
+};
+
+Game::Game()
+    :
+    obj1(args), // Can no longer do this. 
+    obj2(args) // Can no longer do this. 
+{
+    // Constructor Body
+    // Now the default constructor (no args) (more details below about this) will be called on all of the Some_Other_Objects objects. 
+}
+
+```
+
+In this case, it's best to provide an init function for the object that does the same thing as a constructor would do. 
+
+TWO PROBLEMS WITH THIS:
+1. breaks encapsulation. If an init function mostly initializes member variables, then this is allowing a way for an external thing to modify Poo internals directly. Same as basically just making a bunch of setter functions. 
+One way around this is to make an private initialized variable that you check in the init method either through an if statement or using an assert statement.
+
+**Note**: You want to avoid using assert's in production code as it slows things down (release vs debug mode in Visual Studio Community)
+1. Leaves potential for you to make an object and forget to initialize it! You can add assert statements in objects other member functions to provide some checks against this. 
+
+**However, there are ways to avoid all of this in the future.**
+
+### More Initializer Things
+
+You can initialize member variables directly with initializer lists like so:
+
+```C++
+Class Target
+{
+public:
+    Target(int in_x, int in_y)
+    :
+    x (in_x),
+    y(in_y)
+    {
+        //empty
+    }
+
+private:
+    int x;
+    int y;
+}
+
+```
+
+#### Default Constructors
+
+No arguments, automatically provided by the class, UNLESS, you provide a constructor that has arguments. If you do so, then there is no default constructor.
+
+
+### Keyword Static
+
+Data members that are static will not belong to any one object, they belong to the class (or all the objects).
+A static function means a function that can be called without needing an object of the class to call it. You can just do `Class_Name.Static_Function();`
+
+When specifying static on a function, you do not specify it in the definition, only specify static in the header file (the declaration).
+
+
+## Access Specifiers
+- Member data and functions are private by default if its not specified 
+
+
+
+
+# Functions Parameters
+When passing a reference to an object, you can specify constant which means you will not be editing any of the objects member variables, you will just be reading them.
+
+# Types
+
+#### struct
+- Very similar to classes except that all the members default to public instead of private. struct is for simple objects that don't have much internal behavior.
+- You can initialize structs with {} initializer if they have no private data and specify no constructors.
+```C++
+struct vec2
+{
+    int x;
+    int y;
+};
+
+vec2 v = {10,10};
+```
+
+
+#### constexpr
+-Means constant expression. The value or the return value (since it can be applied to functions and constructors) is constant and where possible is computed at compule time. 
