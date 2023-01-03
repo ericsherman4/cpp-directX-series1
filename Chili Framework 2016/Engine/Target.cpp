@@ -3,12 +3,14 @@
 Target::Target()
     :
     rng(rd()),
-    xDist(0,800-width-1),
-    yDist(0,600-width-1)
-   
+    xDist(0, 800 - width - 1),
+    yDist(0, 600 - width - 1),
+    x(xDist(rng)),
+    y(yDist(rng))
+
 {
-    x = xDist(rng);
-    y = yDist(rng);
+    //x = xDist(rng);
+    //y = yDist(rng);
 }
 
 bool Target::ProcessCollision(const Dude& dude)
