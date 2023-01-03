@@ -7,7 +7,8 @@ class Poo
 {
 	// members in the class default to private if no scope specifier given
 public:
-	Poo(int in_x, int in_y, int in_vx, int in_vy);
+	//Poo(int in_x, int in_y, int in_vx, int in_vy);
+	void Init(int in_x, int in_y, int in_vx, int in_vy);
 	void Update();
 	void ProcessConsumption(const Dude &dude);	//make const because not changing any of the member variables of the dude object 
 												// we are only reading
@@ -21,6 +22,7 @@ private:
 	static constexpr int width = 24; //need constexpr or else it wont work, need it if you want to initialize it in the class like this
 	static constexpr int height = 24;
 	bool isEaten = false;
+	bool initialized = false;
 
 };
 

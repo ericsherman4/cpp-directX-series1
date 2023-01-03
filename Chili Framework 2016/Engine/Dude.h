@@ -20,6 +20,6 @@ private:
 	int y;
 	static constexpr int width = 20;
 	static constexpr int height = 20;
-	static constexpr int speed = 1;
+	static constexpr int speed = 5;
 };
 

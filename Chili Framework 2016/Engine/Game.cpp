@@ -31,12 +31,13 @@ Game::Game(MainWindow& wnd)
 	rng(rd()),
 	xDist(0, 770),
 	yDist(0, 570),
-	poo0(xDist(rng), yDist(rng), 1, 1),
-	poo1(xDist(rng), yDist(rng), 1, 1),
-	poo2(xDist(rng), yDist(rng), 1, 1),
+	velDist(-1,1),
 	dude0(400, 300)
 {
-	//empty
+	for (int i = 0; i < nPoo; i++)
+	{
+		poos[i].Init(xDist(rng), yDist(rng), velDist(rng), velDist(rng));
+	}
 }
 
 void Game::Go()

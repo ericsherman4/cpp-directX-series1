@@ -53,6 +53,7 @@ private:
 	std::mt19937 rng;
 	std::uniform_int_distribution<int> xDist;
 	std::uniform_int_distribution<int> yDist;
+	std::uniform_int_distribution<int> velDist;
 
 	static constexpr int nPoo = 1000;
 
