@@ -97,8 +97,25 @@ A static function means a function that can be called without needing an object 
 When specifying static on a function, you do not specify it in the definition, only specify static in the header file (the declaration).
 
 
-## Access Specifiers
+### Access Specifiers
 - Member data and functions are private by default if its not specified 
+
+
+### Nested Classes
+- They're a thing! Good for hiding implementation of a class from everything else, especially of only one other class depends on it. 
+```C++
+class Car
+{
+private:
+    class Engine
+    {
+    private:
+        //stuff
+    };
+    //stuff
+};
+```
+- Note that if they are in the same header file, then in the cpp file, you will have to define the function using `Car::Engine::FunctionName()`. 
 
 
 
@@ -110,7 +127,7 @@ When passing a reference to an object, you can specify constant which means you 
 
 #### struct
 - Very similar to classes except that all the members default to public instead of private. struct is for simple objects that don't have much internal behavior.
-- You can initialize structs with {} initializer if they have no private data and specify no constructors.
+- You can initialize structs with {} initializer if they have no private data and specify no constructors (you can have functions defined inside of structs!).
 ```C++
 struct vec2
 {
