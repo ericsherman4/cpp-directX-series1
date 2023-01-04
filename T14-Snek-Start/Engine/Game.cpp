@@ -20,15 +20,18 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "SpriteCodex.h"
 
 
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd ),
-	brd( gfx ),
-	rng(std::random_device()()) //the first set of parenthesis calls the constructor to create the engine. the 2nd set is an overloaded operator () and this advances the engine's state and returns the generated value. see https://en.cppreference.com/w/cpp/numeric/random/random_device.
+	wnd(wnd),
+	gfx(wnd),
+	brd(gfx),
+	rng(std::random_device()()), //the first set of parenthesis calls the constructor to create the engine. the 2nd set is an overloaded operator () and this advances the engine's state and returns the generated value. see https://en.cppreference.com/w/cpp/numeric/random/random_device.
+	snek(snakeStartLoc),
+	target(targetStartLoc,brd, Colors::Red)
 {
 }
 
@@ -42,18 +45,62 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if (!isGameOver) {
+		if (wnd.kbd.KeyIsPressed('W'))
+		{
+			snakeDir.Set(0, -1);
+		}
+		if (wnd.kbd.KeyIsPressed('D'))
+		{
+			snakeDir.Set(1, 0);
+		}
+		if (wnd.kbd.KeyIsPressed('A'))
+		{
+			snakeDir.Set(-1, 0);
+		}
+		if (wnd.kbd.KeyIsPressed('S'))
+		{
+			snakeDir.Set(0, 1);
+		}
+
+		if (++speedInhibit % snakeSpeed == 0)
+		{
+			if (target.CheckCollision(snek.GetHeadLoc()))
+			{
+				snek.Grow();
+				snek.Grow();
+				snek.Grow();
+				target.Move();
+			}
+			if (snek.CheckSelfCollision() || !snek.IsInBounds(brd))
+			{
+				isGameOver = true;
+			}
+			snek.MoveBy(snakeDir);
+		}
+	}
 }
 
 void Game::ComposeFrame()
 {
-	std::uniform_int_distribution<int> colorDist(0, 255); //move this
+	// std::uniform_int_distribution<int> colorDist(0, 255); //move this
 	for (int y = 0; y < brd.GetGridHeight(); y++)
 	{
 		for (int x = 0; x < brd.GetGridWidth(); x++)
 		{
-			Color c(colorDist(rng), colorDist(rng), colorDist(rng));
+			// Color c(colorDist(rng), colorDist(rng), colorDist(rng));
+			const int color = 50;
+			Color c(color, color, color);
 			Location loc = { x,y }; // can only do this if there is no private data and no constructors.
 			brd.DrawCell(loc, c);
 		}
 	}
+	snek.Draw(brd);
+	target.Draw(brd);
+	
+	if (isGameOver)
+	{
+		SpriteCodex::DrawGameOver(350,300, gfx);
+	}
+
 }

@@ -13,6 +13,8 @@ private:
         void Follow(const Segment& next);
         void MoveBy(const Location& delta_loc);
         void Draw(Board& brd) const;
+        Location GetLoc();
+
     private:
         Location loc;
         Color c;
@@ -23,6 +25,9 @@ public:
     void MoveBy(const Location& delta_loc);
     void Grow();
     void Draw(Board& brd) const;
+    Location GetHeadLoc();
+    bool CheckSelfCollision();
+    bool IsInBounds(const Board & brd);
 
 private:
     static constexpr int nSegmentsMax = 100;

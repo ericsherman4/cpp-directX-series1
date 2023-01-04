@@ -24,6 +24,9 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Board.h"
+#include "Snake.h"
+#include "Location.h"
+#include "Target.h"
 #include <random>
 
 class Game
@@ -47,5 +50,13 @@ private:
 	//std::random_device rd;
 	std::mt19937 rng;
 	Board brd;
+	Location snakeStartLoc = { 20,20 }; //grid space
+	Location targetStartLoc = { 30,30 }; //this is not great because you can easily put a number here that is outside the board dim.
+	Location snakeDir = { 1,0 };
+	Snake snek;
+	Target target;
+	int speedInhibit = 0;
+	static constexpr int snakeSpeed = 5;
+	bool isGameOver = false;
 	/********************************/
 };

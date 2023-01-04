@@ -19,7 +19,7 @@ void Snake::Grow()
 {
     if (nSegments < nSegmentsMax-1)
     {
-        nSegments++;
+        segments[nSegments++].InitBody();
     }
 }
 
@@ -29,6 +29,30 @@ void Snake::Draw(Board& brd) const
     {
         segments[i].Draw(brd);
     }
+}
+
+Location Snake::GetHeadLoc()
+{
+    return segments[0].GetLoc();
+}
+
+bool Snake::CheckSelfCollision()
+{
+    Location headloc = segments[0].GetLoc();
+    for (int i = 1; i < nSegments; i++)
+    {
+        if (headloc.x == segments[i].GetLoc().x && headloc.y == segments[i].GetLoc().y)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Snake::IsInBounds(const Board& brd)
+{
+    Location headloc = GetHeadLoc();
+    return headloc.x <= brd.GetGridWidth() && headloc.x >= 0 && headloc.y <= brd.GetGridHeight() && headloc.y >= 0;
 }
 
 void Snake::Segment::InitHead(const Location& in_loc)
@@ -57,5 +81,13 @@ void Snake::Segment::MoveBy(const Location& delta_loc)
 
 void Snake::Segment::Draw(Board& brd) const
 {
-    brd.DrawCell(loc, c);
+    if (loc.x >= 0 && loc.x <= brd.GetGridWidth() && loc.y >= 0 && loc.y <= brd.GetGridHeight())
+    {
+        brd.DrawCell(loc, c);
+    }
+}
+
+Location Snake::Segment::GetLoc()
+{
+    return loc;
 }
