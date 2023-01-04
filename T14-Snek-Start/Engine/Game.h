@@ -29,6 +29,12 @@
 #include "Target.h"
 #include <random>
 
+
+/*
+	Game is not polished got lazy with a few pieces of the code so there things like colliding with the wall and yourself look pretty bad. 
+	Skipping the heomwork so that I can move on in the series. 
+
+*/
 class Game
 {
 public:
@@ -56,7 +62,7 @@ private:
 	Snake snek;
 	Target target;
 	int speedInhibit = 0;
-	static constexpr int snakeSpeed = 5;
+	static constexpr int snakeSpeed = 15;
 	bool isGameOver = false;
 	/********************************/
 };
