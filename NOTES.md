@@ -138,6 +138,40 @@ struct vec2
 vec2 v = {10,10};
 ```
 
+#### Floats
+- If you want a float literal, place an `f` after the number or else the compiler will treat it as a double. If the number is an int on it's own, need to append `.0f` or you might get a compiler warning of converting int to float.
+
 
 #### constexpr
 -Means constant expression. The value or the return value (since it can be applied to functions and constructors) is constant and where possible is computed at compule time. 
+
+#### auto
+
+- Only really great for when you have stupidly long type names. Otherwise it's better to specify so that your code is more self documenting.
+
+
+
+# Namespaces
+
+Can shorten typing by doing something like:
+```C++
+std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+// |
+// V
+using std::chrono::steady_clock;
+steady_clock::time_point start = steady_clock::now();
+```
+This will promote std::chrono::steady_clock to the scope of which `using` exists in.
+
+- It is not recommended to ever use the `using` inside of a header file because it will be global to anything that includes that header file, therefore polluting the global namespace.
+
+You can also do `using namespace std;` which will promote `std` to the namespace that the directive was used in. Not a great example but:
+
+```C++
+std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+// |
+// V
+using namespace std;
+using chrono::steady_clock;
+steady_clock::time_point start = steady_clock::now();
+```
