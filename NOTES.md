@@ -117,7 +117,49 @@ private:
 ```
 - Note that if they are in the same header file, then in the cpp file, you will have to define the function using `Car::Engine::FunctionName()`. 
 
+### Overloaded Functions
 
+Example for operator+
+
+```C++
+class Vec2 {
+    public:
+        // Returns a new vector object.
+        // const Vec2 & rhs
+        // -> reference to a Vec2 object.
+        // -> const because not modifying the reference.
+        // const function because not modifying the calling vector object.
+        Vec2 operator+(const Vec2 &rhs) const; 
+};
+
+```
+
+You can also overload += and -=, etc. **Note** for these functions you *should* return a reference to the object.
+
+Cool thing with the operator += and etc.
+
+```C++
+// One implementation
+Vec2& Vec2::operator+=(const Vec2& rhs)
+{
+    x += rhs.x;
+    y += rhs.y;
+    return *this;
+}
+
+// A better implementation (given operator + has already been defined):
+Vec2& Vec2::operator+=(const Vec2& rhs)
+{
+    // This seems to also work
+    return *this + rhs;
+
+    // But he suggested this
+    return *this = *this + rhs;
+
+    // I think latter returns a reference but the former might make a local Vec2 object and then it goes out of scope? But neither versions crashed the code though.
+}
+
+```
 
 
 # Functions Parameters
