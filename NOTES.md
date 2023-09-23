@@ -175,3 +175,10 @@ using namespace std;
 using chrono::steady_clock;
 steady_clock::time_point start = steady_clock::now();
 ```
+
+# Compiler, Linker, Preprocessor
+This tutorial explains it insanely well: https://wiki.planetchili.net/index.php/Beginner_C%2B%2B_Game_Programming_Tutorial_18
+
+Takeaways
+- All cpp files go into the compiler as separate entities. Then it's the linker's job to connect all the pieces of assembly into one executable. This includes connecting the function calls from cpp files to each other and also any calls from external libraries / dependencies that are specified. 
+- There was a cool note about specifying external libraries to link against in the source code using `#pragma` but there is a note in wiki about the downsides of that. 
