@@ -181,4 +181,7 @@ This tutorial explains it insanely well: https://wiki.planetchili.net/index.php/
 
 Takeaways
 - All cpp files go into the compiler as separate entities. Then it's the linker's job to connect all the pieces of assembly into one executable. This includes connecting the function calls from cpp files to each other and also any calls from external libraries / dependencies that are specified. 
-- There was a cool note about specifying external libraries to link against in the source code using `#pragma` but there is a note in wiki about the downsides of that. 
+- There was a cool note about specifying external libraries to link against in the source code using `#pragma comment(lib,"name_of_lib")` but there is a note in wiki about the downsides of that. 
+  - This is a microsoft extension so other compiler may not support it. supported for clang (not for linux linker tho), and not supported by gcc. Best to use CMake!
+
+
