@@ -185,7 +185,7 @@ vec2 v = {10,10};
 
 
 #### constexpr
--Means constant expression. The value or the return value (since it can be applied to functions and constructors) is constant and where possible is computed at compule time. 
+-Means constant expression. The value or the return value (since it can be applied to functions and constructors) is constant and where possible is computed at compile time. 
 
 #### auto
 
@@ -226,4 +226,24 @@ Takeaways
 - There was a cool note about specifying external libraries to link against in the source code using `#pragma comment(lib,"name_of_lib")` but there is a note in wiki about the downsides of that. 
   - This is a microsoft extension so other compiler may not support it. supported for clang (not for linux linker tho), and not supported by gcc. Best to use CMake!
 
+# Loops
 
+### For Loops
+#### Range Based For Loops
+
+Example
+```C++
+
+class Lines
+{
+};
+
+Line bunch_of_lines[200];
+
+// For loop returns a reference (could also do const reference if you want) to object in the bunch_of_lines array for you to do some actions on.
+for( Line& l: bunch_of_lines)
+{
+    l.some_line_obj_function();
+}
+```
+ 
