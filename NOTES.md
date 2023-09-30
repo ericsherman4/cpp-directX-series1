@@ -15,7 +15,8 @@ private:
 
 Game::Game()
     :
-    obj1(args),
+    obj1(args), //note you can directly pass in args for that objects constructor! don't need to do:
+    // obj1 (Some_Other_Object(args)),
     obj2(args)
 {
     // Constructor Body
@@ -61,6 +62,64 @@ One way around this is to make an private initialized variable that you check in
 
 **However, there are ways to avoid all of this in the future.**
 
+#### Default Constructors
+
+No arguments, automatically provided by the class, UNLESS, you provide a constructor that has arguments. If you do so, then there is no default constructor. You can request the compiler generate one for you by doing:
+
+```C++
+class Foo 
+{
+    // tell the compiler to generate a default constructor for you
+    // do not have to implement this.
+    foo() = default; 
+
+    // normal constructor
+    foo(int bar);
+};
+```
+
+#### Chaining Constructors Using Initializer Lists (sorta)
+
+This is known as constructor delegation. Call the other constructor using a colon and then the constructor.
+
+```C++
+// RectF.h
+class RectF
+{
+public:
+
+    RectF() = default;
+    RectF(float top, float left, float bottom, float right);
+    RectF(const Vec2& topleft, const Vec2& bottomright);
+    RectF(const Vec2& topleft, float width, float height);
+};
+
+// ---------------------------------
+//RectF.cpp
+
+RectF::RectF(float top, float left, float bottom, float right)
+    :
+    top(top),
+    left(left),
+    bottom(bottom),
+    right(right)
+{
+}
+
+RectF::RectF(const Vec2& topleft, const Vec2& bottomright)
+    : RectF(topleft.x, topleft.y, bottomright.x, bottomright.y)
+{    
+}
+
+RectF::RectF(const Vec2& topleft, float width, float height)
+    : RectF(topleft, Vec2(width, height));
+{
+}
+```
+
+
+
+
 ### More Initializer Things
 
 You can initialize member variables directly with initializer lists like so:
@@ -84,9 +143,7 @@ private:
 
 ```
 
-#### Default Constructors
 
-No arguments, automatically provided by the class, UNLESS, you provide a constructor that has arguments. If you do so, then there is no default constructor.
 
 
 ### Keyword Static
