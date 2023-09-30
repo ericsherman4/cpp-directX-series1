@@ -20,11 +20,17 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include "Vec2.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd )
+	wnd(wnd),
+	gfx(wnd),
+	brick(RectF(200.0f, 200.0f, 500.0f, 600.0f), Colors::White),
+	ball(Vec2(100.0f,100.0f), Vec2(400.0f,300.134f)),
+	walls(0.0f, 0.0f, float(gfx.ScreenHeight), float(gfx.ScreenWidth))
+	// RectF(float top, float left, float bottom, float right)
+	//walls(RectF(300, 300, 500, 500))
 {
 
 }
@@ -39,10 +45,17 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	const float dt = ft.Mark();
+	ball.Update(dt);
+	ball.handleWallCollision(walls);
+	bool destroyed = ball.handleBrickCollision(brick.GetRect());
+	brick.SetDestroyed(destroyed);
 
 }
 
 void Game::ComposeFrame()
 {
-
+	gfx.DrawRect(walls, Colors::Black);
+	brick.Draw(gfx);
+	ball.Draw(gfx);
 }
