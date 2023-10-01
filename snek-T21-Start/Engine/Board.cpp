@@ -1,5 +1,7 @@
 #include "Board.h"
 #include <assert.h>
+#include "Snake.h"
+#include "Goal.h"
 
 Board::Board( Graphics& gfx )
 	:
@@ -35,6 +37,11 @@ bool Board::IsInsideBoard( const Location & loc ) const
 		loc.y >= 0 && loc.y < height;
 }
 
+bool Board::checkForObstacle(const Location& loc) const
+{
+	return hasObstacle[loc.y * width + loc.x];
+}
+
 void Board::DrawBorder()
 {
 	const int top = y;
@@ -50,4 +57,34 @@ void Board::DrawBorder()
 	gfx.DrawRect( right - borderWidth,top + borderWidth,right,bottom - borderWidth,borderColor );
 	// bottom
 	gfx.DrawRect( left,bottom - borderWidth,right,bottom,borderColor );
+}
+
+void Board::SpawnObstacle(std::mt19937& rng, const Snake& snake, const Goal& goal)
+{
+	std::uniform_int_distribution<int> xDist(0, GetGridWidth() - 1);
+	std::uniform_int_distribution<int> yDist(0, GetGridHeight() - 1);
+
+	Location newLoc;
+	do
+	{
+		newLoc.x = xDist(rng);
+		newLoc.y = yDist(rng);
+	} while (snake.IsInTile(newLoc) || checkForObstacle(newLoc) || goal.GetLocation() == newLoc);
+
+	hasObstacle[newLoc.y * width + newLoc.x] = true;
+
+}
+
+void Board::DrawObstacles()
+{
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			if (checkForObstacle({ x,y }))
+			{
+				DrawCell( {x,y}, obstacleColor);
+			}
+		}
+	}
 }

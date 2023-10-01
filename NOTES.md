@@ -21,7 +21,6 @@ Game::Game()
 {
     // Constructor Body
 }
-
 ```
 **The order of the execution of the initializer list has nothing to do with the order in which they appear in the constructor, but purely depend on the order of which they the member variables are declared.**
 
@@ -61,6 +60,8 @@ One way around this is to make an private initialized variable that you check in
 1. Leaves potential for you to make an object and forget to initialize it! You can add assert statements in objects other member functions to provide some checks against this. 
 
 **However, there are ways to avoid all of this in the future.**
+
+
 
 #### Default Constructors
 
@@ -224,7 +225,7 @@ When passing a reference to an object, you can specify constant which means you 
 
 # Types
 
-#### struct
+### struct
 - Very similar to classes except that all the members default to public instead of private. struct is for simple objects that don't have much internal behavior.
 - You can initialize structs with {} initializer if they have no private data and specify no constructors (you can have functions defined inside of structs!).
 ```C++
@@ -237,16 +238,38 @@ struct vec2
 vec2 v = {10,10};
 ```
 
-#### Floats
+### Floats
 - If you want a float literal, place an `f` after the number or else the compiler will treat it as a double. If the number is an int on it's own, need to append `.0f` or you might get a compiler warning of converting int to float.
 
 
-#### constexpr
+### constexpr
 -Means constant expression. The value or the return value (since it can be applied to functions and constructors) is constant and where possible is computed at compile time. 
 
-#### auto
+### auto
 
 - Only really great for when you have stupidly long type names. Otherwise it's better to specify so that your code is more self documenting.
+
+### Enums
+
+Every thing in an enum is public so there's no specifying public / private. Enums are just an int under the hood (but you can change that). Example below:
+
+```C++
+class Board
+{
+public:
+    // specify the underlying data type after the colon.
+    // for example, short, char, int, etc. default int.
+    enum class CellContents : char
+    {
+        Thing1, //assigns this to zero by default and counts up by 1
+        Obstacle,
+        Food = 34,
+        Poison = 49,
+    };
+private:
+    CellContents contents[100] = {CellContents::Thing1};
+};
+```
 
 
 
@@ -283,9 +306,58 @@ Takeaways
 - There was a cool note about specifying external libraries to link against in the source code using `#pragma comment(lib,"name_of_lib")` but there is a note in wiki about the downsides of that. 
   - This is a microsoft extension so other compiler may not support it. supported for clang (not for linux linker tho), and not supported by gcc. Best to use CMake!
 
+### How to Get Around Circular Dependencies
+
+If you have classes that need to include each other, you can include the .h file in the .cpp file and then use forward declaration so the compiler doesn't complain about the function declaration in the class. Example below. It's best to design your systems though that you don't have circular dependencies and don't need forward declarations to solve them.
+
+```C++
+// bar.h file
+#include "Foo.h"
+class Bar
+{
+
+};
+
+// foo.h file
+#include "bar.h" //NO, BAD, THIS WONT WORK.
+class Foo
+{
+    // forward dec comes with the keyword class
+    void some_func(const class Bar& bar);
+};
+
+//foo.cpp
+#include "bar.h"
+```
+
+
 # Loops
 
 ### For Loops
+
+Random fun fact: you can declare variables in for loops like this.
+```C++
+for(int y{0}; y < 3; y++)
+{
+    //whatever.
+}
+
+// This also works for making other objects. 
+// Say you have function
+void checkLocation(const &Location loc);
+
+// and simple class Location
+class Location
+{
+public:
+    int x;
+    int y;
+};
+
+// you can call the function like this
+checkLocation({4,5}); 
+```
+
 #### Range Based For Loops
 
 Example
@@ -303,4 +375,14 @@ for( Line& l: bunch_of_lines)
     l.some_line_obj_function();
 }
 ```
- 
+# Mutli-dimensional Arrays
+
+An interesting article *against* MD arrays and why: https://cplusplus.com/forum/articles/17108/.
+
+# Conditionals
+### Switch Statements
+
+- Switch statements only work on ints.
+- What the case statements are checking must be known at compile time. 
+- Can't have a case statement that checks a variable.
+- If you want to declare some local variables inside of a case statement, you must use curly braces in that case statement to create a scope for those local variables. Leave the break statement out of the curly braces though. 
