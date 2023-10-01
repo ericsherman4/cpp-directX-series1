@@ -26,12 +26,25 @@ Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
-	brick(RectF(200.0f, 200.0f, 500.0f, 600.0f), Colors::White),
-	ball(Vec2(100.0f,100.0f), Vec2(400.0f,300.134f)),
+	ball(Vec2(400.0f,300.0f), Vec2(300.0f,400.134f)),
 	walls(0.0f, 0.0f, float(gfx.ScreenHeight), float(gfx.ScreenWidth))
 	// RectF(float top, float left, float bottom, float right)
 	//walls(RectF(300, 300, 500, 500))
 {
+	const Color colors[rows] = { Colors::Red, Colors::White, Colors::Blue, Colors::Green, Colors::Cyan };
+
+	Vec2 topleft(startx, starty);
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			bricks[i*cols + j] = Brick(RectF(topleft, brickwidth, brickheight), colors[i]);
+			topleft.x += brickwidth + spacex;
+		}
+		topleft.x = startx;
+		topleft.y += brickheight + spacey;
+	}
 
 }
 
@@ -46,16 +59,35 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	const float dt = ft.Mark();
+	//const float frametime = 1.0f / 60.0f;
 	ball.Update(dt);
 	ball.handleWallCollision(walls);
-	bool destroyed = ball.handleBrickCollision(brick.GetRect());
-	brick.SetDestroyed(destroyed);
+
+
+	for (Brick& b : bricks)
+	{
+		if (!b.GetDestroyed())
+		{
+			bool destroyed = ball.handleBrickCollision(b.GetRect());
+			b.SetDestroyed(destroyed);
+			if (destroyed)
+			{
+				break;
+			}
+		}
+	}
+
 
 }
 
 void Game::ComposeFrame()
 {
 	gfx.DrawRect(walls, Colors::Black);
-	brick.Draw(gfx);
+
+	for (const Brick& b : bricks)
+	{
+		b.Draw(gfx);
+	}
+
 	ball.Draw(gfx);
 }

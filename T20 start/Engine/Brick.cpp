@@ -26,7 +26,15 @@ void Brick::Draw(Graphics& gfx) const
 
 void Brick::SetDestroyed(bool value)
 {
-    isDestroyed = value;
+    if (!isDestroyed)
+    {
+        isDestroyed = value;
+    }
+}
+
+bool Brick::GetDestroyed() const
+{
+    return isDestroyed;
 }
 
 const RectF& Brick::GetRect()

@@ -11,6 +11,7 @@ public:
     Brick(const RectF &rect, Color c);
     void Draw(Graphics& gfx) const;
     void SetDestroyed(bool value);
+    bool GetDestroyed() const;
     const RectF& GetRect();
 
 private:

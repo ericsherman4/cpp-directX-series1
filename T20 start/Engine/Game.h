@@ -42,13 +42,22 @@ private:
 	/********************************/
 private:
 	
-	
+
+	static constexpr int rows = 5;
+	static constexpr int cols = 14;
+	static constexpr float brickheight = 21;
+	static constexpr float brickwidth = 43;
+	static constexpr float startx = 50.0f;
+	static constexpr float starty = 50.0f;
+	static constexpr float spacex = 4.0f;
+	static constexpr float spacey = spacex;
+
 	MainWindow& wnd;
 	Graphics gfx;
 	FrameTimer ft;
-	Brick brick;
 	Ball ball;
 	RectF walls;
+	Brick bricks[cols * rows];
 
 	/********************************/
 	/*  User Variables              */
