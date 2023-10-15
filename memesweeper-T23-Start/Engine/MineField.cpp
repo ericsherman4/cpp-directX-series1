@@ -60,6 +60,7 @@ void MineField::onRevealClick(const Vei2& screenPos)
                 lost = true;
             }
         }
+        recurseReveal(gridPos);
     }
 }
 
@@ -72,6 +73,29 @@ void MineField::onFlagClick(const Vei2& screenPos)
         if (!tile.isRevealed())
         {
             tile.ToggleFlag();
+        }
+    }
+}
+
+void MineField::recurseReveal(const Vei2& gridPos)
+{
+    Tile & tile = TileAt(gridPos);
+    if (tile.hasNoAdjMines())
+    {
+        for (Vei2 iterator = gridPos - Vei2(1, 1); iterator.y <= (gridPos.y + 1); iterator.y++)
+        {
+            for (iterator.x = gridPos.x - 1; iterator.x <= (gridPos.x + 1); iterator.x++)
+            {
+                if (!(iterator.x < 0 || iterator.x >= width || iterator.y < 0 || iterator.y >= height))
+                {
+                    Tile& tile = TileAt(iterator);
+                    if (!tile.isRevealed())
+                    {
+                        tile.Reveal();
+                        recurseReveal(iterator);
+                    }
+                }
+            }
         }
     }
 }
@@ -158,6 +182,11 @@ void MineField::Tile::ToggleFlag()
 bool MineField::Tile::isFlagged() const
 {
     return state == State::Flagged;
+}
+
+bool MineField::Tile::hasNoAdjMines() const
+{
+    return nAdjMines == 0;
 }
 
 void MineField::Tile::Draw(const Vei2& screenpos, bool lost, Graphics& gfx) const

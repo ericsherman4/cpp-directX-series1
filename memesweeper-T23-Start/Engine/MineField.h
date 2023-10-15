@@ -19,6 +19,7 @@ private:
         bool isRevealed() const;
         void ToggleFlag();
         bool isFlagged() const;
+        bool hasNoAdjMines() const;
         void Draw(const Vei2& screenpos, bool lost, Graphics& gfx) const ;
         void setAdjMineCount(int nMines);
     private:
@@ -31,6 +32,7 @@ public:
     void Draw(Graphics& gfx) const;
     void onRevealClick(const Vei2& screenPos);
     void onFlagClick(const Vei2& screenPos);
+    void recurseReveal(const Vei2 & gridPos);
     RectI GetRect() const;
     int CountAdjMines(const Vei2& GridPos);
 private:
